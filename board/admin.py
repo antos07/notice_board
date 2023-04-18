@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from board.models import Notice, Comment
+
+
+admin.site.register(Notice)
+admin.site.register(Comment)
