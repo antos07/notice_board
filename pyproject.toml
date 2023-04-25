@@ -12,6 +12,7 @@ django = "^4.2"
 psycopg = "^3.1.8"
 djangorestframework = "^3.14.0"
 markdown = "^3.4.3"
+drf-spectacular = "^0.26.2"
 
 
 [build-system]
