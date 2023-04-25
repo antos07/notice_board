@@ -4,12 +4,11 @@ version = "0.1.0"
 description = ""
 authors = ["antos07 <trotsenko.ant07@gmail.com>"]
 readme = "README.md"
-packages = [{include = "notice_board"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^4.2"
-psycopg = "^3.1.8"
+psycopg = {extras = ["binary"], version = "^3.1.8"}
 djangorestframework = "^3.14.0"
 markdown = "^3.4.3"
 drf-spectacular = "^0.26.2"
