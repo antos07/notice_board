@@ -1,7 +1,11 @@
+from django.db.models import QuerySet
+from drf_spectacular.utils import (extend_schema, extend_schema_view,
+                                   OpenApiParameter, OpenApiResponse, )
 from rest_framework import viewsets
+from rest_framework.generics import get_object_or_404
 
-from board.models import Notice
-from board.serializers import NoticeSerializer
+from board.models import Notice, Comment
+from board.serializers import NoticeSerializer, CommentSerializer
 
 
 class NoticeViewSet(viewsets.ModelViewSet):
@@ -10,3 +14,43 @@ class NoticeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: NoticeSerializer) -> None:
         serializer.save(author=self.request.user)
+
+
+_comment_detail_schema = extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='id',
+            type=int,
+            location='path',
+            description="A unique integer value identifying this comment.",
+        ),
+    ])
+
+
+@extend_schema_view(
+    retrieve=_comment_detail_schema,
+    update=_comment_detail_schema,
+    partial_update=_comment_detail_schema,
+    destroy=_comment_detail_schema,
+)
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name='notice_pk',
+            type=int,
+            location='path',
+            description="A unique integer value identifying the notice.",
+        ),
+    ],
+)
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self) -> QuerySet:
+        return Comment.objects.filter(reply_to=self.get_reply_to())
+
+    def perform_create(self, serializer: CommentSerializer) -> None:
+        serializer.save(author=self.request.user, reply_to=self.get_reply_to())
+
+    def get_reply_to(self) -> Notice:
+        return get_object_or_404(Notice, pk=self.kwargs['notice_pk'])
