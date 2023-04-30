@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.db.models.fields import reverse_related
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'board.apps.BoardConfig',
     'rest_framework',
     'drf_spectacular',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -110,12 +114,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # Rest framework
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Notice Board API',
     'VERSION': '0.0.0',
 }
+
+SIMPLE_JWT = {}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
