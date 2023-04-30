@@ -10,6 +10,14 @@ class NoticeSerializer(serializers.ModelSerializer):
         read_only_fields = ('author',)
 
 
+class NoticeIdSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=False)
+
+    class Meta:
+        model = Notice
+        fields = ('id',)
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment

@@ -2,12 +2,13 @@ from django.db.models import QuerySet
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, )
 from rest_access_policy import AccessViewSetMixin
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins, exceptions, permissions
 from rest_framework.generics import get_object_or_404
 
 from board.access_policies import BoardElementAccessPolicy
 from board.models import Notice, Comment
-from board.serializers import NoticeSerializer, CommentSerializer
+from board.serializers import (NoticeSerializer, CommentSerializer,
+                               NoticeIdSerializer, )
 
 
 class NoticeViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -58,3 +59,29 @@ class CommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
 
     def get_reply_to(self) -> Notice:
         return get_object_or_404(Notice, pk=self.kwargs['notice_pk'])
+
+
+class FavouriteNoticeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                             mixins.DestroyModelMixin,
+                             viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self) -> QuerySet:
+        return Notice.objects.filter(in_favourites_of=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return NoticeSerializer
+        return NoticeIdSerializer
+
+    def perform_create(self, serializer: NoticeIdSerializer) -> None:
+        notice_id = serializer.validated_data['id']
+        try:
+            notice = Notice.objects.get(id=notice_id)
+        except Notice.DoesNotExist:
+            raise exceptions.ParseError(detail='Notice with given id does '
+                                               'not exist.')
+        notice.in_favourites_of.add(self.request.user)
+
+    def perform_destroy(self, instance: Notice) -> None:
+        instance.in_favourites_of.remove(self.request.user)
