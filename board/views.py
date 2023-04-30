@@ -1,16 +1,19 @@
 from django.db.models import QuerySet
 from drf_spectacular.utils import (extend_schema, extend_schema_view,
-                                   OpenApiParameter, OpenApiResponse, )
+                                   OpenApiParameter, )
+from rest_access_policy import AccessViewSetMixin
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 
+from board.access_policies import BoardElementAccessPolicy
 from board.models import Notice, Comment
 from board.serializers import NoticeSerializer, CommentSerializer
 
 
-class NoticeViewSet(viewsets.ModelViewSet):
+class NoticeViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     queryset = Notice.objects
     serializer_class = NoticeSerializer
+    access_policy = BoardElementAccessPolicy
 
     def perform_create(self, serializer: NoticeSerializer) -> None:
         serializer.save(author=self.request.user)
@@ -43,8 +46,9 @@ _comment_detail_schema = extend_schema(
         ),
     ],
 )
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    access_policy = BoardElementAccessPolicy
 
     def get_queryset(self) -> QuerySet:
         return Comment.objects.filter(reply_to=self.get_reply_to())
