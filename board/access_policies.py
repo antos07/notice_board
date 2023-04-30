@@ -8,12 +8,12 @@ from board.models import Notice
 class BoardElementAccessPolicy(AccessPolicy):
     statements = [
         {
-            'action': '<safe_methods>',  # get/head/options
+            'action': ['retrieve', 'list'],
             'principal': '*',
             'effect': 'allow',
         },
         {
-            'action': 'create',
+            'action': ['create', 'my'],
             'principal': 'authenticated',
             'effect': 'allow',
         },

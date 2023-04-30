@@ -3,7 +3,10 @@ from drf_spectacular.utils import (extend_schema, extend_schema_view,
                                    OpenApiParameter, )
 from rest_access_policy import AccessViewSetMixin
 from rest_framework import viewsets, mixins, exceptions, permissions
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
+from rest_framework.request import Request
+from rest_framework.response import Response
 
 from board.access_policies import BoardElementAccessPolicy
 from board.models import Notice, Comment
@@ -18,6 +21,14 @@ class NoticeViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer: NoticeSerializer) -> None:
         serializer.save(author=self.request.user)
+
+    @action(detail=False)
+    def my(self, request: Request) -> Response:
+        """Notices from the current user"""
+        notices = self.get_queryset()
+        notices = notices.filter(author=request.user)
+        serializer = self.get_serializer(notices, many=True)
+        return Response(serializer.data)
 
 
 _comment_detail_schema = extend_schema(
