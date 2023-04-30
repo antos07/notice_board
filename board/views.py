@@ -25,8 +25,8 @@ _comment_detail_schema = extend_schema(
         OpenApiParameter(
             name='id',
             type=int,
-            location='path',
-            description="A unique integer value identifying this comment.",
+            location=OpenApiParameter.PATH,
+            description='A unique integer value identifying this comment.',
         ),
     ])
 
@@ -42,8 +42,8 @@ _comment_detail_schema = extend_schema(
         OpenApiParameter(
             name='notice_pk',
             type=int,
-            location='path',
-            description="A unique integer value identifying the notice.",
+            location=OpenApiParameter.PATH,
+            description='A unique integer value identifying the notice.',
         ),
     ],
 )
@@ -61,6 +61,18 @@ class CommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         return get_object_or_404(Notice, pk=self.kwargs['notice_pk'])
 
 
+@extend_schema_view(
+    destroy=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='id',
+                type=int,
+                location=OpenApiParameter.PATH,
+                description='A unique integer value identifying the notice.',
+            )
+        ]
+    )
+)
 class FavouriteNoticeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
                              mixins.DestroyModelMixin,
                              viewsets.GenericViewSet):
