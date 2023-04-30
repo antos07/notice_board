@@ -15,6 +15,9 @@ class Notice(models.Model):
     in_favourites_of = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                               related_name='favourites')
 
+    def __str__(self) -> str:
+        return self.title
+
     @property
     def is_edited(self):
         return self.created_at != self.last_edited_at
@@ -27,3 +30,6 @@ class Comment(models.Model):
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     last_edited_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f'"{self.text}" to "{self.reply_to}"'
