@@ -73,6 +73,12 @@ class CommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
 
 
 @extend_schema_view(
+    create=extend_schema(
+        description='Add a notice to favourites.'
+    ),
+    list=extend_schema(
+        description='List favourite notices.',
+    ),
     destroy=extend_schema(
         parameters=[
             OpenApiParameter(
@@ -81,7 +87,8 @@ class CommentViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
                 location=OpenApiParameter.PATH,
                 description='A unique integer value identifying the notice.',
             )
-        ]
+        ],
+        description='Remove a notice from favourites.'
     )
 )
 class FavouriteNoticeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
