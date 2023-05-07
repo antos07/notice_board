@@ -12,7 +12,7 @@ COPY poetry.lock pyproject.toml /code/
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
 
-COPY . /code
+COPY .. /code
 
 EXPOSE 8000
 

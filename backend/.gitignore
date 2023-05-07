@@ -1,4 +1,4 @@
-# COPPIED FROM .gitignore
+
 
 
 # Byte-compiled / optimized / DLL files
@@ -157,6 +157,3 @@ cython_debug/
 
 # PyCharm
 .idea/
-
-# docker volude
-pgdb_data/
