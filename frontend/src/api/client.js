@@ -8,10 +8,10 @@ const client = axios.create({
 })
 
 applyAuthTokenInterceptor(client, {
-    requestRefresh: async (refresh) => {
-        const url = `${BASE_URL}/api/jwt/refresh`
-        const response = await axios.post(url, {refresh})
-        return response.data.refresh
+    requestRefresh: (refresh) => {
+        const url = `${BASE_URL}/api/jwt/refresh/`
+        // Some magic from the docs
+        return axios.post(url, {refresh}).then(response => response.data.access)
     }
 })
 
