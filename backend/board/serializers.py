@@ -4,6 +4,7 @@ from board.models import Notice, Comment
 
 
 class NoticeSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField()
     class Meta:
         model = Notice
         exclude = ('in_favourites_of',)
