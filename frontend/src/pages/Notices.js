@@ -1,9 +1,39 @@
-import {Notice} from "../components/Notice";
+import {List} from "antd";
+import {listAll} from "../api/notices";
+import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
 export function Notices() {
-    return <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-        <Notice notice={{author: "test1", title: "title1", text: "some text1"}}/>
-        <Notice notice={{author: "test2", title: "title2", text: "some text2"}}/>
-        <Notice notice={{author: "test3", title: "title3", text: "some text3"}}/>
-    </div>
+    const [notices, setNotices] = useState()
+
+    useEffect(() => {
+        async function getNotices() {
+            const notices = await listAll()
+            setNotices(notices)
+        }
+
+        getNotices()
+    }, [])
+
+    return <div style={{display: "flex", justifyContent: "center"}}>
+        <List
+            itemLayout="vertical"
+            bordered
+            size="large"
+            dataSource={notices}
+            renderItem={(notice) => {
+                return <List.Item key={notice.id}>
+                    <List.Item.Meta
+                        title={<Link to="#">{notice.title}</Link>}
+                        description={"by " + notice.author}
+                    />
+                    {notice.text}
+                </List.Item>
+            }}
+            style={{
+                textAlign: "left",
+                width: "50%",
+                minWidth: 350
+            }}
+        /></div>
 }
