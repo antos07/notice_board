@@ -5,12 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
 import {Notices} from "./pages/Notices";
+import {Login} from "./pages/Login";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App/>}>
             <Route index element={<Navigate to="notices"/>}/>
             <Route path="notices" element={<Notices/>}/>
+            <Route path="login" element={<Login/>}/>
         </Route>
     )
 )

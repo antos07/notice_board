@@ -8,9 +8,9 @@ const client = axios.create({
 })
 
 applyAuthTokenInterceptor(client, {
-    requestRefresh: async (refreshToken) => {
+    requestRefresh: async (refresh) => {
         const url = `${BASE_URL}/api/jwt/refresh`
-        const response = await axios.post(url, {refresh: refreshToken})
+        const response = await axios.post(url, {refresh})
         return response.data.refresh
     }
 })
