@@ -43,11 +43,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'djoser',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -125,6 +127,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {}
+
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
