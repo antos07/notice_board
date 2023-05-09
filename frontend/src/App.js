@@ -12,7 +12,9 @@ function App() {
                 minHeight: 250,
                 width: "100%",
                 display: "flex",
-                justifyContent: "center"
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column"
             }}>
                 <Outlet/>
             </Layout.Content>

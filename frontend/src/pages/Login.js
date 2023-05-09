@@ -22,7 +22,7 @@ export function Login() {
         navigate('/')
     }
 
-    return <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
+    return <>
         {contextHolder}
         <Form
             name="basic"
@@ -65,5 +65,5 @@ export function Login() {
                 </Button>
             </Form.Item>
         </Form>
-    </div>
+    </>
 }

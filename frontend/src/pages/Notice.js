@@ -23,12 +23,7 @@ export function Notice() {
         // eslint-disable-next-line
     }, [])
 
-    return <div style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column"
-    }}>
+    return <>
         <NoiceComponent notice={notice}/>
         <div style={{width: "50%", minWidth: 350}}>
             <Divider orientation="left">Comments</Divider>
@@ -51,5 +46,5 @@ export function Notice() {
                 </List.Item>
             }}
         />
-    </div>
+    </>
 }

@@ -15,25 +15,24 @@ export function Notices() {
         getNotices()
     }, [])
 
-    return <div style={{display: "flex", justifyContent: "center"}}>
-        <List
-            itemLayout="vertical"
-            bordered
-            size="large"
-            dataSource={notices}
-            renderItem={(notice) => {
-                return <List.Item key={notice.id}>
-                    <List.Item.Meta
-                        title={<Link to={`${notice.id}`}>{notice.title}</Link>}
-                        description={"by " + notice.author}
-                    />
-                    {notice.text}
-                </List.Item>
-            }}
-            style={{
-                textAlign: "left",
-                width: "50%",
-                minWidth: 350
-            }}
-        /></div>
+    return <List
+        itemLayout="vertical"
+        bordered
+        size="large"
+        dataSource={notices}
+        renderItem={(notice) => {
+            return <List.Item key={notice.id}>
+                <List.Item.Meta
+                    title={<Link to={`${notice.id}`}>{notice.title}</Link>}
+                    description={"by " + notice.author}
+                />
+                {notice.text}
+            </List.Item>
+        }}
+        style={{
+            textAlign: "left",
+            width: "50%",
+            minWidth: 350
+        }}
+    />
 }
