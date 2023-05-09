@@ -24,7 +24,7 @@ export function Notices() {
             renderItem={(notice) => {
                 return <List.Item key={notice.id}>
                     <List.Item.Meta
-                        title={<Link to="#">{notice.title}</Link>}
+                        title={<Link to={`${notice.id}`}>{notice.title}</Link>}
                         description={"by " + notice.author}
                     />
                     {notice.text}

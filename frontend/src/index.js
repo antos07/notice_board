@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
 import {Notices} from "./pages/Notices";
 import {Login} from "./pages/Login";
+import {Notice} from "./pages/Notice";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -13,6 +14,7 @@ const router = createBrowserRouter(
             <Route index element={<Navigate to="notices"/>}/>
             <Route path="notices" element={<Notices/>}/>
             <Route path="login" element={<Login/>}/>
+            <Route path="notices/:id" element={<Notice/>}/>
         </Route>
     )
 )
