@@ -1,8 +1,10 @@
 import {Layout, Menu} from "antd";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {isLoggedIn} from "axios-jwt";
 
 export function Header() {
+    const location = useLocation()
+
     return (<Layout.Header>
         <Menu mode="horizontal" theme={"dark"} selectable={false}>
             <Menu.Item key="list-notices"><Link to={'notices'}>Notices</Link></Menu.Item>
