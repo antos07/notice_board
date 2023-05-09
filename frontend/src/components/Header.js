@@ -10,7 +10,7 @@ export function Header() {
                 !isLoggedIn() ? (
                     <>
                         <Menu.Item key="login" style={{marginLeft: 'auto'}}><Link to={"login"}>Login</Link></Menu.Item>
-                        <Menu.Item key="signup"><Link to={"#"}>Sign up</Link></Menu.Item>
+                        <Menu.Item key="signup"><Link to={"signup"}>Sign up</Link></Menu.Item>
                     </>
                 ) : (
                     <Menu.Item key="profile" style={{marginLeft: 'auto'}}><Link to={"#"}>Profile</Link></Menu.Item>

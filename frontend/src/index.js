@@ -7,6 +7,7 @@ import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterPr
 import {Notices} from "./pages/Notices";
 import {Login} from "./pages/Login";
 import {Notice} from "./pages/Notice";
+import {Signup} from "./pages/Signup";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
             <Route path="notices" element={<Notices/>}/>
             <Route path="login" element={<Login/>}/>
             <Route path="notices/:id" element={<Notice/>}/>
+            <Route path="signup" element={<Signup/>}/>
         </Route>
     )
 )
