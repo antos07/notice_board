@@ -13,7 +13,7 @@ export function Header() {
                         <Menu.Item key="signup"><Link to={"signup"}>Sign up</Link></Menu.Item>
                     </>
                 ) : (
-                    <Menu.Item key="profile" style={{marginLeft: 'auto'}}><Link to={"#"}>Profile</Link></Menu.Item>
+                    <Menu.Item key="profile" style={{marginLeft: 'auto'}}><Link to={"profile"}>Profile</Link></Menu.Item>
                 )
             }
         </Menu>
