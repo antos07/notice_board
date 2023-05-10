@@ -1,14 +1,19 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getById} from "../api/notices";
+import {getById, remove} from "../api/notices";
 import {listAll} from "../api/comments";
 import {Notice as NoiceComponent} from "../components/Notice";
-import {Divider, List} from "antd";
+import {Divider, List, notification} from "antd";
+import {getMe} from "../api/users";
+import {isAxiosError} from "axios";
 
 export function Notice() {
     const {id} = useParams()
     const [notice, setNotice] = useState({})
     const [comments, setComments] = useState([])
+    const [isAuthor, setIsAuthor] = useState(false)
+    const navigate = useNavigate()
+    const [notificationInstance, contextHolder] = notification.useNotification()
 
     useEffect(() => {
         async function getNotice() {
@@ -17,6 +22,16 @@ export function Notice() {
 
             const comments = await listAll(id)
             setComments(comments)
+
+            try {
+                const user = await getMe()
+                if (user.username === notice.author)
+                    setIsAuthor(true)
+            } catch (e) {
+                if (!isAxiosError(e) && e.response.status !== 401) {
+                    throw e;
+                }
+            }
         }
 
         getNotice()
@@ -24,7 +39,24 @@ export function Notice() {
     }, [])
 
     return <>
-        <NoiceComponent notice={notice}/>
+        {contextHolder}
+        <NoiceComponent
+            notice={notice}
+            isAuthor={isAuthor}
+            onDelete={async () => {
+                try {
+                    await remove(notice.id)
+                } catch (e) {
+                    let message = "Error"
+                    if (isAxiosError(e)) {
+                        message = e.response.data.detail || message
+                    }
+                    notificationInstance.error({message, placement: "top"})
+                    return
+                }
+                navigate('/')
+            }}
+        />
         <div style={{width: "50%", minWidth: 350}}>
             <Divider orientation="left">Comments</Divider>
         </div>

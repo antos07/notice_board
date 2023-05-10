@@ -20,3 +20,7 @@ export async function create(title, text) {
     const response = await client.post('/api/notices/', {title, text})
     return response.data
 }
+
+export async function remove(id) {
+    await client.delete(`/api/notices/${id}/`)
+}
