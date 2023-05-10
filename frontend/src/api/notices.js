@@ -15,3 +15,8 @@ export async function listMy() {
     const response = await client.get('/api/notices/my/')
     return response.data
 }
+
+export async function create(title, text) {
+    const response = await client.post('/api/notices/', {title, text})
+    return response.data
+}

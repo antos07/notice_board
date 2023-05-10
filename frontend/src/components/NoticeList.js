@@ -1,7 +1,7 @@
 import {List} from "antd";
 import {Link} from "react-router-dom";
 
-export function NoticeList({notices, style}) {
+export function NoticeList({notices, style, footer}) {
     return <List
         itemLayout="vertical"
         bordered
@@ -20,5 +20,6 @@ export function NoticeList({notices, style}) {
             textAlign: "left",
             ...style
         }}
+        footer={footer}
     />
 }
