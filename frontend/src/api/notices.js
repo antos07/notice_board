@@ -10,3 +10,8 @@ export const getById = async (id) => {
     const response = await client.get(`/api/notices/${id}/`)
     return response.data
 }
+
+export async function listMy() {
+    const response = await client.get('/api/notices/my/')
+    return response.data
+}
