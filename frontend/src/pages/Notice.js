@@ -1,6 +1,6 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getById, remove} from "../api/notices";
+import {edit, getById, remove} from "../api/notices";
 import {listAll} from "../api/comments";
 import {Notice as NoiceComponent} from "../components/Notice";
 import {Divider, List, notification} from "antd";
@@ -43,6 +43,18 @@ export function Notice() {
         <NoiceComponent
             notice={notice}
             isAuthor={isAuthor}
+            onSave={async (values) => {
+                try {
+                    const newNotice = await edit(notice.id, values.title, values.text)
+                    setNotice(newNotice)
+                } catch (e) {
+                    let message = "Error"
+                    if (isAxiosError(e)) {
+                        message = e.response.data.detail || message
+                    }
+                    notificationInstance.error({message, placement: "top"})
+                }
+            }}
             onDelete={async () => {
                 try {
                     await remove(notice.id)

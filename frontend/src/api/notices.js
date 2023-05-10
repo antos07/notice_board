@@ -24,3 +24,8 @@ export async function create(title, text) {
 export async function remove(id) {
     await client.delete(`/api/notices/${id}/`)
 }
+
+export async function edit(id, title, text) {
+    const response = await client.patch(`/api/notices/${id}/`, {text, title})
+    return response.data
+}

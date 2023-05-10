@@ -1,19 +1,23 @@
 import {Form, Input, Modal} from "antd";
 
-export function NoticeCreationForm({form, open, onCreate, onCancel}) {
+export function NoticeForm({title, open, onSave, onCancel, initialValues}) {
+    const [form] = Form.useForm()
     return (
         <Modal
             open={open}
-            title="Add a new notice"
-            okText="Add"
+            title={title}
+            okText="Save"
             cancelText="Cancel"
-            onCancel={onCancel}
+            onCancel={() => {
+                onCancel()
+                form.resetFields()
+            }}
             onOk={() => {
                 form
                     .validateFields()
                     .then((values) => {
                         form.resetFields();
-                        onCreate(values);
+                        onSave(values);
                     });
             }}
         >
@@ -21,6 +25,7 @@ export function NoticeCreationForm({form, open, onCreate, onCancel}) {
                 form={form}
                 layout="vertical"
                 name="add_notice_form"
+                initialValues={initialValues}
             >
                 <Form.Item
                     name="title"

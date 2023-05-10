@@ -1,15 +1,14 @@
-import {Button, Form, notification} from "antd";
+import {Button, notification} from "antd";
 import {create, listAll} from "../api/notices";
 import {useEffect, useState} from "react";
 import {NoticeList} from "../components/NoticeList";
 import {isLoggedIn} from "axios-jwt";
-import {NoticeCreationForm} from "../components/NoticeCreationForm";
+import {NoticeForm} from "../components/NoticeForm";
 import {isAxiosError} from "axios";
 
 export function Notices() {
     const [notices, setNotices] = useState([])
     const [open, setOpen] = useState(false)
-    const [form] = Form.useForm()
     const [notificationInstance, contextHolder] = notification.useNotification()
 
     useEffect(() => {
@@ -53,13 +52,11 @@ export function Notices() {
                         setOpen(true)
                     }}
                 >Add</Button>
-                <NoticeCreationForm
+                <NoticeForm
                     open={open}
-                    form={form}
-                    onCreate={onCreate}
+                    onSave={onCreate}
                     onCancel={() => {
                         setOpen(false)
-                        form.resetFields()
                     }}
                 />
             </>
