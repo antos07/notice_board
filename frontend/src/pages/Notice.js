@@ -1,11 +1,13 @@
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {edit, getById, remove} from "../api/notices";
-import {listAll} from "../api/comments";
+import {listAll, create} from "../api/comments";
 import {Notice as NoiceComponent} from "../components/Notice";
-import {Divider, List, notification} from "antd";
+import {Button, Divider, List, notification} from "antd";
 import {getMe} from "../api/users";
 import {isAxiosError} from "axios";
+import {CommentForm} from "../components/CommentForm";
+import {isLoggedIn} from "axios-jwt";
 
 export function Notice() {
     const {id} = useParams()
@@ -14,6 +16,7 @@ export function Notice() {
     const [isAuthor, setIsAuthor] = useState(false)
     const navigate = useNavigate()
     const [notificationInstance, contextHolder] = notification.useNotification()
+    const [commentFormOpen, setCommentFromOpen] = useState(false)
 
     useEffect(() => {
         async function getNotice() {
@@ -37,6 +40,20 @@ export function Notice() {
         getNotice()
         // eslint-disable-next-line
     }, [])
+
+    async function createComment({text}) {
+        try {
+            const comment = await create(notice.id, text)
+            const newComments = comments
+            newComments.push(comment)
+            setComments(newComments)
+        } catch (e) {
+            if (!isAxiosError(e)) {
+                throw e
+            }
+            notificationInstance.error({message: e.response.data.detail || "Error", placement: "top"})
+        }
+    }
 
     return <>
         {contextHolder}
@@ -89,6 +106,19 @@ export function Notice() {
                     {comment.text}
                 </List.Item>
             }}
+            footer={(isLoggedIn() && <Button
+                type="primary"
+                onClick={() => setCommentFromOpen(true)}
+            >Add</Button>)}
+        />
+        <CommentForm
+            title={"Add comment"}
+            open={commentFormOpen}
+            onSave={async (values) => {
+                await createComment(values)
+                setCommentFromOpen(false)
+            }}
+            onCancel={() => setCommentFromOpen(false)}
         />
     </>
 }
