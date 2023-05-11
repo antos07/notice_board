@@ -10,3 +10,8 @@ export async function create(noticeId, text) {
     const response = await client.post(`/api/notices/${noticeId}/comments/`, {text})
     return response.data
 }
+
+
+export async function remove(noticeId, commentId) {
+    await client.delete(`/api/notices/${noticeId}/comments/${commentId}/`)
+}

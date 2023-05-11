@@ -1,19 +1,20 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {edit, getById, remove} from "../api/notices";
-import {listAll, create} from "../api/comments";
+import {listAll, create, remove as removeComment} from "../api/comments";
 import {Notice as NoiceComponent} from "../components/Notice";
-import {Button, Divider, List, notification} from "antd";
+import {Button, Divider, List, notification, Space, Typography} from "antd";
 import {getMe} from "../api/users";
 import {isAxiosError} from "axios";
 import {CommentForm} from "../components/CommentForm";
 import {isLoggedIn} from "axios-jwt";
+import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 
 export function Notice() {
     const {id} = useParams()
     const [notice, setNotice] = useState({})
     const [comments, setComments] = useState([])
-    const [isAuthor, setIsAuthor] = useState(false)
+    const [user, setUser] = useState({})
     const navigate = useNavigate()
     const [notificationInstance, contextHolder] = notification.useNotification()
     const [commentFormOpen, setCommentFromOpen] = useState(false)
@@ -28,8 +29,7 @@ export function Notice() {
 
             try {
                 const user = await getMe()
-                if (user.username === notice.author)
-                    setIsAuthor(true)
+                setUser(user)
             } catch (e) {
                 if (!isAxiosError(e) && e.response.status !== 401) {
                     throw e;
@@ -59,7 +59,7 @@ export function Notice() {
         {contextHolder}
         <NoiceComponent
             notice={notice}
-            isAuthor={isAuthor}
+            isAuthor={user.username === notice.author}
             onSave={async (values) => {
                 try {
                     const newNotice = await edit(notice.id, values.title, values.text)
@@ -98,12 +98,29 @@ export function Notice() {
             }}
             dataSource={comments}
             renderItem={(comment) => {
-                return <List.Item key={comment.id}>
+                return <List.Item
+                    key={comment.id}
+                    actions={(comment.author === user.username) && [
+                        <Button type="link"><EditOutlined/></Button>,
+                        <Button
+                            type="link"
+                            onClick={async () => {
+                                await removeComment(notice.id, comment.id)
+                                const newComments = comments.filter(
+                                    filteredComment => filteredComment.id !== comment.id
+                                )
+                                setComments(newComments)
+                            }}
+                        >
+                            <DeleteOutlined/>
+                        </Button>
+                    ]}
+                >
                     <List.Item.Meta
                         title={<b>{comment.author}</b>}
                         description={(new Date(comment.created_at)).toUTCString()}
                     />
-                    {comment.text}
+                    <Typography.Text>{comment.text}</Typography.Text>
                 </List.Item>
             }}
             footer={(isLoggedIn() && <Button
