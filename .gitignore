@@ -1,2 +1,4 @@
 # Ignore PyCharm's settings folder
 .idea/
+
+env/
