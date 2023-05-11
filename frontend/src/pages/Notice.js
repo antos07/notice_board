@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {edit, getById, remove} from "../api/notices";
-import {listAll, create, remove as removeComment} from "../api/comments";
+import {listAll, create, remove as removeComment, edit as editComment} from "../api/comments";
 import {Notice as NoiceComponent} from "../components/Notice";
 import {Button, Divider, List, notification, Space, Typography} from "antd";
 import {getMe} from "../api/users";
@@ -17,7 +17,9 @@ export function Notice() {
     const [user, setUser] = useState({})
     const navigate = useNavigate()
     const [notificationInstance, contextHolder] = notification.useNotification()
-    const [commentFormOpen, setCommentFromOpen] = useState(false)
+    const [commentCreateFormOpen, setCommentCreateFromOpen] = useState(false)
+    const [commentEditFormOpen, setCommentEditFromOpen] = useState(false)
+    const [editedComment, setEditedComment] = useState({})
 
     useEffect(() => {
         async function getNotice() {
@@ -101,7 +103,10 @@ export function Notice() {
                 return <List.Item
                     key={comment.id}
                     actions={(comment.author === user.username) && [
-                        <Button type="link"><EditOutlined/></Button>,
+                        <Button type="link" onClick={() => {
+                            setEditedComment(comment)
+                            setCommentEditFromOpen(true)
+                        }}><EditOutlined/></Button>,
                         <Button
                             type="link"
                             onClick={async () => {
@@ -125,17 +130,32 @@ export function Notice() {
             }}
             footer={(isLoggedIn() && <Button
                 type="primary"
-                onClick={() => setCommentFromOpen(true)}
+                onClick={() => setCommentCreateFromOpen(true)}
             >Add</Button>)}
         />
         <CommentForm
             title={"Add comment"}
-            open={commentFormOpen}
+            open={commentCreateFormOpen}
             onSave={async (values) => {
                 await createComment(values)
-                setCommentFromOpen(false)
+                setCommentCreateFromOpen(false)
             }}
-            onCancel={() => setCommentFromOpen(false)}
+            onCancel={() => setCommentCreateFromOpen(false)}
+        />
+        <CommentForm
+            title={"Edit comment"}
+            open={commentEditFormOpen}
+            onSave={async (values) => {
+                await editComment(notice.id, editedComment.id, values.text)
+                editedComment.text = values.text
+                setEditedComment({})
+                setCommentEditFromOpen(false)
+            }}
+            onCancel={() => {
+                setEditedComment({})
+                setCommentEditFromOpen(false)
+            }}
+            initialValues={editedComment}
         />
     </>
 }

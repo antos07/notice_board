@@ -15,3 +15,10 @@ export async function create(noticeId, text) {
 export async function remove(noticeId, commentId) {
     await client.delete(`/api/notices/${noticeId}/comments/${commentId}/`)
 }
+
+
+export async function edit(noticeId, commentId, text) {
+    const response = await client.patch(`/api/notices/${noticeId}/comments/${commentId}/`,
+        {text})
+    return response.data
+}
